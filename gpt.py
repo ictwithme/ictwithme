@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# گرفتن کلید API از محیط امن
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def ask_gpt(prompt: str) -> str:
@@ -21,3 +20,7 @@ def ask_gpt(prompt: str) -> str:
         return response['choices'][0]['message']['content'].strip()
     except Exception as e:
         return f"❌ خطا در دریافت پاسخ از GPT: {str(e)}"
+
+# برای سازگاری با فایل scheduler.py
+def generate_analysis(text: str) -> str:
+    return ask_gpt(text)
