@@ -11,8 +11,9 @@ from db import init_db, add_user, set_user_status, get_user_status, get_active_u
 
 load_dotenv()
 
-TELEGRAM_BOT_TOKEN = os.getenv("7637175756:AAHU2LxBRVmOo7CbrIgl1j7ZovG3ex_En30")
-CHANNEL_ID = os.getenv("@ictwithme")  # مثل: i"@ctwithme"
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+CHANNEL_ID = os.getenv("CHANNEL_ID")
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
