@@ -1,19 +1,17 @@
-from telegram import Update
+# handlers.py
+
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 
-async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update.callback_query
-    await query.answer()
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    keyboard = [
+        [InlineKeyboardButton("📢 دریافت اخبار اقتصادی", callback_data="toggle_news_on")],
+        [InlineKeyboardButton("🔕 عدم دریافت اخبار اقتصادی", callback_data="toggle_news_off")],
+        [InlineKeyboardButton("📎 عضویت در کانال", url="https://t.me/ictwithme")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
 
-    data = query.data
-
-    if data == "toggle_news_on":
-        await query.edit_message_text("📬 دریافت اخبار اقتصادی فعال شد.")
-        # اینجا می‌تونی در دیتابیس وضعیت کاربر رو ذخیره کنی
-
-    elif data == "toggle_news_off":
-        await query.edit_message_text("🔕 دریافت اخبار اقتصادی غیرفعال شد.")
-        # اینجا هم می‌تونی وضعیت رو غیرفعال کنی
-
-    else:
-        await query.edit_message_text("❓ فرمان ناشناخته.")
+    await update.message.reply_text(
+        "سلام 👋\nبه ربات تحلیل اخبار اقتصادی خوش آمدید.\nلطفاً از گزینه‌های زیر استفاده کنید:",
+        reply_markup=reply_markup
+    )
