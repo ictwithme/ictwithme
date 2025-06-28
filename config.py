@@ -1,14 +1,10 @@
 import os
 from dotenv import load_dotenv
-import pytz
 
 load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-CHANNEL_USERNAME = os.getenv("CHANNEL_USERNAME", "@ictwithme")
+CHANNEL_ID = os.getenv("CHANNEL_ID")
+DB_PATH = os.getenv("DB_PATH", "users.db")
 
-DB_PATH = "db.sqlite3"
-
-# منطقه زمانی نیویورک
-NEW_YORK_TIMEZONE = pytz.timezone("America/New_York")
+NEW_YORK_TIMEZONE = "America/New_York"
