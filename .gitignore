@@ -1,0 +1,30 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment folders
+.venv/
+venv/
+env/
+
+# Ignore environment variable files
+.env
+*.env
+
+# Ignore SQLite database
+*.db
+
+# Ignore logs and cache
+*.log
+*.sqlite3
+.cache/
+*.pyc
+
+# Ignore VS Code settings (optional)
+.vscode/
+
+# Ignore Mac and OS system files
+.DS_Store
+
+# Ignore requirements file created by pip freeze if not used
+pip-freeze.txt
