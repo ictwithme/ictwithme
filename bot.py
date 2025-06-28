@@ -1,5 +1,4 @@
 import os
-import asyncio
 from telegram.ext import (
     Application,
     CommandHandler,
@@ -19,7 +18,7 @@ load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
-async def main():
+def main():
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
 
     application.add_handler(CommandHandler("start", start))
@@ -28,18 +27,8 @@ async def main():
 
     create_scheduler(application.bot)
 
-    # اجرای ربات با polling
-    await application.run_polling(close_loop=False)
+    # اجرای مستقیم بدون async
+    application.run_polling()
 
 if __name__ == "__main__":
-    try:
-        # بررسی اینکه آیا event loop در حال اجراست
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            # اگر در محیطی مثل Jupyter یا Render هستیم
-            loop.create_task(main())
-        else:
-            loop.run_until_complete(main())
-    except RuntimeError:
-        # حالت fallback برای محیط‌هایی که بالا نمی‌آیند
-        asyncio.run(main())
+    main()
