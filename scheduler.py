@@ -38,3 +38,4 @@ def create_scheduler(bot: Bot):
     scheduler = AsyncIOScheduler(timezone=TIMEZONE)
     scheduler.add_job(check_forex_news, 'interval', minutes=1, args=[bot])
     scheduler.start()
+return scheduler
