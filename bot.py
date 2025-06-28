@@ -9,16 +9,15 @@ from scheduler import create_scheduler
 from news import check_forexfactory, check_bloomberg, check_investing
 from db import init_db, add_user, set_user_status, get_user_status, get_active_users
 
-# بارگذاری متغیرهای محیطی
 load_dotenv()
-TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-CHANNEL_ID = os.getenv("CHANNEL_ID")
 
-# لاگ‌گیری
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+CHANNEL_ID = os.getenv("CHANNEL_ID")  # مثال: "@ictwithme"
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# دکمه‌های اصلی
+# دکمه‌های اصلی ربات
 def get_main_keyboard():
     keyboard = [
         [InlineKeyboardButton("📡 دریافت اخبار اقتصادی", callback_data='toggle_news')],
@@ -26,7 +25,7 @@ def get_main_keyboard():
     ]
     return InlineKeyboardMarkup(keyboard)
 
-# فرمان start
+# هندلر start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     add_user(user_id)
@@ -35,7 +34,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=get_main_keyboard()
     )
 
-# مدیریت دکمه‌ها
+# دکمه‌ها
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
@@ -56,7 +55,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await context.bot.send_message(chat_id=user_id, text=test_text)
         await context.bot.send_message(chat_id=CHANNEL_ID, text=f"[تست کاربر {user_id}]\n{test_text}")
 
-# اجرای زمان‌بندی‌شده اخبار
+# زمان‌بندی خودکار
 async def scheduled_tasks(application):
     await check_forexfactory(application)
     users = get_active_users()
@@ -64,7 +63,7 @@ async def scheduled_tasks(application):
         await check_bloomberg(application, user_id)
         await check_investing(application, user_id)
 
-# تابع اصلی اجرا
+# اجرای اصلی
 async def main():
     init_db()
     application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
@@ -72,9 +71,8 @@ async def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CallbackQueryHandler(button_handler))
 
-    scheduler = create_scheduler()
+    scheduler = create_scheduler(application.bot)  # 🟢 اصلاح این خط
     scheduler.add_job(lambda: asyncio.create_task(scheduled_tasks(application)), 'interval', minutes=5)
-    scheduler.start()
 
     await application.run_polling()
 
