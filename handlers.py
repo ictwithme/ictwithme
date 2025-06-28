@@ -1,24 +1,19 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from keyboards import main_menu
-from database import add_user, set_receive_news
 
-WELCOME_TEXT = """
-به ربات اخبار اقتصادی خوش آمدید 📊
-از دکمه‌های زیر برای دریافت اخبار و تحلیل‌ها استفاده کنید.
-"""
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.effective_user
-    add_user(user.id, user.username or "")
-    await update.message.reply_text(WELCOME_TEXT, reply_markup=main_menu())
-
-async def toggle_receive_news(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_button_click(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    user_id = query.from_user.id
-    current = context.user_data.get("receive_news", False)
-    new_state = not current
-    set_receive_news(user_id, new_state)
-    context.user_data["receive_news"] = new_state
-    await query.answer("دریافت خبر {} شد ✅".format("فعال" if new_state else "غیرفعال"))
-    await query.edit_message_reply_markup(reply_markup=main_menu())
+    await query.answer()
+
+    data = query.data
+
+    if data == "toggle_news_on":
+        await query.edit_message_text("📬 دریافت اخبار اقتصادی فعال شد.")
+        # اینجا می‌تونی در دیتابیس وضعیت کاربر رو ذخیره کنی
+
+    elif data == "toggle_news_off":
+        await query.edit_message_text("🔕 دریافت اخبار اقتصادی غیرفعال شد.")
+        # اینجا هم می‌تونی وضعیت رو غیرفعال کنی
+
+    else:
+        await query.edit_message_text("❓ فرمان ناشناخته.")
